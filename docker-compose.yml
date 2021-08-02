@@ -1,7 +1,7 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    laravel.test:
+    simple.pos:
         build:
             context: ./vendor/laravel/sail/runtimes/8.0
             dockerfile: Dockerfile
@@ -18,23 +18,24 @@ services:
         networks:
             - sail
         depends_on:
-            - pgsql
+            - mysql
             - redis
-    pgsql:
-        image: 'postgres:13'
+    mysql:
+        image: 'mysql:8.0'
         ports:
-            - '${FORWARD_DB_PORT:-1235}:1235'
+            - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
-            PGPASSWORD: '${DB_PASSWORD:-secret}'
-            POSTGRES_DB: '${DB_DATABASE}'
-            POSTGRES_USER: '${DB_USERNAME}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         volumes:
-            - 'sailpgsql:/var/lib/postgresql/data'
+            - 'sailmysql:/var/lib/mysql'
         networks:
             - sail
         healthcheck:
-          test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+          test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
           retries: 3
           timeout: 5s
     redis:
@@ -53,7 +54,7 @@ networks:
     sail:
         driver: bridge
 volumes:
-    sailpgsql:
+    sailmysql:
         driver: local
     sailredis:
         driver: local

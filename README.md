@@ -7,3 +7,6 @@ sail up -d
 ```
 sail artisan migrate --seed
 ```
+
+# run test
+sail artisan test

@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->string('code', 20);
             $table->date('date');
             $table->foreignId('customer_id')->references('id')->on('customers');
-            $table->float('amount_to_collect');
+            $table->float('amount_to_collect')->default(0);
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\BasicJsonResource;
 use App\Http\Resources\JsonErrorResource;
@@ -87,8 +88,11 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return new JsonErrorResource(data: $validator->getMessageBag()->toArray());
         }
-        
-        $product->update($request->only('code', 'name', 'price'));
+
+        // prevent racing condition
+        Cache::lock("product:{$product->id}")->get(function() use ($product, $request) {
+            $product->update($request->only('code', 'name', 'price'));
+        });
 
         return new ProductResource($product);
     }
@@ -106,7 +110,10 @@ class ProductController extends Controller
             return new JsonErrorResource(message: "product_not_found");
         }
 
-        $product->delete();
+        // prevent racing condition
+        Cache::lock("product:{$product->id}")->get(function() use ($product) {
+            $product->delete();
+        });
 
         return new BasicJsonResource(message: "Product data deleted.");
     }

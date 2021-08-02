@@ -13,10 +13,6 @@ class CustomerTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function setUp(): void 
-    {
-        parent::setUp();
-    }
     /**
      * A basic feature test example.
      *
@@ -28,7 +24,7 @@ class CustomerTest extends TestCase
         $response = $this->get(route('api.customers.index'));
         $response->assertStatus(Response::HTTP_OK);
 
-        $responseJson = $response->json();
+        $responseJson = $response->json()['data'];
 
         $this->assertEquals(count($responseJson), 3);
         $this->assertEquals($responseJson[0]['name'], $customers[0]->name);

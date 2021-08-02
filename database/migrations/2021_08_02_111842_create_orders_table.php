@@ -15,7 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 20);
+            $table->string('code', 20)->unique();
             $table->date('date');
             $table->foreignId('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->float('amount_to_collect')->default(0);

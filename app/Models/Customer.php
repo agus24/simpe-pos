@@ -9,7 +9,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    public $fillable = ['code', 'name', 'address'];
+    public $fillable = ['name', 'phone_number', 'address'];
 
     public function orders() 
     {

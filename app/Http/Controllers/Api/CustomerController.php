@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\BasicJsonResource;
@@ -88,8 +89,11 @@ class CustomerController extends Controller
         if ($validator->fails()) {
             return new JsonErrorResource(data: $validator->getMessageBag()->toArray());
         }
-        
-        $customer->update($request->only('name', 'phone_number', 'address'));
+
+        // prevent racing condition
+        Cache::lock("customer:{$customer->id}")->get(function() use ($customer, $request) {
+            $customer->update($request->only('name', 'phone_number', 'address'));
+        });
 
         return new CustomerResource($customer);
     }
@@ -107,7 +111,10 @@ class CustomerController extends Controller
             return new JsonErrorResource(message: "customer_not_found");
         }
 
-        $customer->delete();
+        // prevent racing condition
+        Cache::lock("customer:{$customer->id}")->get(function() use ($customer) {
+            $customer->delete();
+        });
 
         return new BasicJsonResource(message: "Customer data deleted.");
     }

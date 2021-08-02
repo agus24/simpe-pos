@@ -22,7 +22,7 @@ class ProductTest extends TestCase
         $response = $this->get(route('api.products.index'));
         $response->assertStatus(Response::HTTP_OK);
 
-        $responseJson = $response->json();
+        $responseJson = $response->json()['data'];
 
         $this->assertEquals(count($responseJson), 3);
         $this->assertEquals($responseJson[0]['name'], $products[0]->name);

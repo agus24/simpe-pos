@@ -1,0 +1,390 @@
+{
+	"info": {
+		"_postman_id": "00f14394-67e7-4233-9981-276a5ad735b2",
+		"name": "Simpe POS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Get All Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:88/api/customers",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Customer 1",
+									"type": "text"
+								},
+								{
+									"key": "phone_number",
+									"value": "+628123456798",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Some address is here",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:88/api/customers",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:88/api/customers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"customers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Customer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "phone_number",
+									"value": "+627892123456",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "some address",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:88/api/customers/2",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"customers",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:88/api/customers/2",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"customers",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:88/api/products",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "code",
+									"value": "somecode",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Product Name",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "10000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:88/api/products",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:88/api/products/2",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"products",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "code",
+									"value": "somecode",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Product Name",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "10000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:88/api/products/2",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"products",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:88/api/products/2",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"products",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "date",
+									"value": "2021-08-02",
+									"type": "text"
+								},
+								{
+									"key": "customer_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "items[0][product_id]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "items[0][quantity]",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:88/api/orders",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:88/api/orders/1",
+							"host": [
+								"localhost"
+							],
+							"port": "88",
+							"path": [
+								"api",
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api/customers"
+		}
+	]
+}

@@ -18,9 +18,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all()->map(function($value) {
-            return new ProductResource($value);
-        });
+        return [
+            "data" => Product::all()->map(function($value) {
+                return new ProductResource($value);
+            })
+        ];
     }
 
     /**

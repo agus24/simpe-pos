@@ -19,9 +19,11 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return Customer::all()->map(function($value) {
-            return new CustomerResource($value);
-        });
+        return [
+            "data" => Customer::all()->map(function($value) {
+                return new CustomerResource($value);
+            })
+        ];
     }
 
     /**

@@ -14,7 +14,9 @@ class OrderItemResource extends JsonResource
      */
     public function toArray($request)
     {
+        // prevent n+1 queries
         $this->load('product');
+
         return [
             "product" => new ProductResource($this->product),
             "quantity" => $this->quantity

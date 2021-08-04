@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    public $fillable = ['code', 'date', 'customer_id', 'amount_to_collect'];
+    public $fillable = ['code', 'date', 'customer_id', 'amount_to_collect', 'promo_id'];
 
     public $casts = [
         "date" => "date"
@@ -23,6 +23,11 @@ class Order extends Model
     public function items() 
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
+    }
+
+    public function promo() 
+    {
+        return $this->belongsTo(Promo::class, "promo_id", "id");
     }
 
     public static function getUniqueOrderCode() 

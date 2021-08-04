@@ -23,7 +23,8 @@ class OrderResource extends JsonResource
             "date" => $this->date->format('Y-m-d'),
             "customer" => new CustomerResource($this->customer),
             "amount_to_collect" => $this->amount_to_collect,
-            "items" => $this->items->map(fn($value) => new OrderItemResource($value))
+            "promo" => new PromoResource($this->promo),
+            "items" => $this->items->map(fn($value) => new OrderItemResource($value)),
         ];
     }
 }

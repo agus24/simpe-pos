@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
+use App\Models\Promo;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\JsonErrorResource;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\JsonErrorResource;
 
 class OrderController extends Controller
 {
@@ -23,6 +24,8 @@ class OrderController extends Controller
             "date" => "required|date",
             "customer_id" => "required|exists:customers,id",
             'items' => 'required|array',
+            // 'promo_id' => 'exists:promos,id|unique:orders,promo_id',
+            'promo_id' => 'exists:promos,id',
             "items.*.product_id" => "required|exists:products,id",
             "items.*.quantity" => "required|numeric|min:1"
         ]);
@@ -31,8 +34,13 @@ class OrderController extends Controller
             return new JsonErrorResource(data: $validator->getMessageBag()->toArray());
         }
 
+        if ($request->promo_id && !Promo::isValid($request->toArray())) {
+            return new JsonErrorResource(message: "Sorry, You cannot use this promo code.");
+        }
+
         $order = Order::create([
             "code" => Order::getUniqueOrderCode(),
+            "promo_id" => $request->promo_id,
             "date" => $request->date,
             "customer_id" => $request->customer_id,
         ]);
@@ -48,7 +56,15 @@ class OrderController extends Controller
             })->toArray()
         );
 
-        $order->amount_to_collect = $order->items->map(fn($value) => $value->product->price * $value->quantity)->sum();
+        $amount_to_collect = $order->items
+            ->map(fn($value) => $value->product->price * $value->quantity)
+            ->sum();
+
+        if ($order->promo) {
+            $amount_to_collect = $amount_to_collect * $order->promo->discount_percentage / 100;
+        }
+
+        $order->amount_to_collect = $amount_to_collect;
         $order->save();
 
         return new OrderResource($order);

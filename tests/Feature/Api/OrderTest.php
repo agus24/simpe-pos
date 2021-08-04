@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use Tests\TestCase;
 use App\Models\Order;
+use App\Models\Promo;
 use App\Models\Product;
 use App\Models\Customer;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +20,15 @@ class OrderTest extends TestCase
      */
     public function test_create()
     {
-        $product = Product::factory()->create();
         $customer = Customer::factory()->create();
+
+        $promo = Promo::factory()->create();
+        $promo->minimum_price = 100_000;
+        $promo->save();
+
+        $product = Product::factory()->create();
+        $product->price = 50_000;
+        $product->save();
 
         $data = [];
         $response = $this->post(route('api.orders.store'), $data);
@@ -53,6 +61,20 @@ class OrderTest extends TestCase
         $this->assertEquals($responseJson['amount_to_collect'], $product->price);
         $this->assertEquals($responseJson['items'][0]['product']['id'], $product->id);
         $this->assertEquals($responseJson['items'][0]['quantity'], $items[0]['quantity']);
+        $this->assertEquals($responseJson['promo'], null);
+
+        // with promo
+        $data['promo_id'] = $promo->id;
+        $response = $this->post(route('api.orders.store'), $data);
+        $responseJson = $response->json()['data'];
+        $response->assertStatus(Response::HTTP_BAD_REQUEST);
+
+        $data['items'][0]['quantity'] = 2;
+        $response = $this->post(route('api.orders.store'), $data);
+        $responseJson = $response->json()['data'];
+        $response->assertStatus(Response::HTTP_CREATED);
+
+        $this->assertEquals($responseJson['promo']['id'], $promo->id);
     }
 
     public function test_get_data() 

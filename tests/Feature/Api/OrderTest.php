@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Promo;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Repositories\OrderRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -111,5 +112,33 @@ class OrderTest extends TestCase
         $responseJson = $response->json()['data'];
 
         $this->assertEquals($responseJson['message'], "Order not found.");
+    }
+
+    public function test_order_repository_create() 
+    {
+        $product = Product::factory()->create();
+        $customer = Customer::factory()->create();
+
+        $items = [
+            [
+                "product_id" => $product->id,
+                "quantity" => 1
+            ]
+        ];
+
+        $data = [
+            "date" => now()->format('Y-m-d'),
+            "customer_id" => $customer->id,
+            "items" => $items
+        ];
+
+        OrderRepository::init(new Order)->create($data);
+
+        $this->assertEquals(Order::all()->count(), 1);
+
+        $order = Order::first();
+        $this->assertEquals($order->customer_id, $data['customer_id']);
+        $this->assertEquals($order->items->count(), 1);
+        $this->assertEquals($order->items->first()->product_id, $product->id);
     }
 }

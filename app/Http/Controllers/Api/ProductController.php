@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\BasicJsonResource;
@@ -32,21 +33,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $validator = $this->validateApi($request, [
-            "code" => "required|unique:products,code",
-            "name" => "required",
-            "price" => "required|numeric|min:0"
-        ]);
-
-        if ($validator->fails()) {
-            return new JsonErrorResource(data: $validator->getMessageBag()->toArray());
-        }
-
-        return new ProductResource(
-            Product::create($request->only('code', 'name', 'price'))
-        );
+        return new ProductResource($request->save());
     }
 
     /**
@@ -69,32 +58,12 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, Product $product)
     {
-        $product = Product::find($id);
-        if (!$product) {
-            return new JsonErrorResource(message: "product_not_found");
-        }
-
-        $validator = $this->validateApi($request, [
-            "code" => "required|unique:products,code,{$product->id}",
-            "name" => "required",
-            "price" => "required|numeric|min:0"
-        ]);
-
-        if ($validator->fails()) {
-            return new JsonErrorResource(data: $validator->getMessageBag()->toArray());
-        }
-
-        // prevent racing condition
-        Cache::lock("product:{$product->id}")->get(function() use ($product, $request) {
-            $product->update($request->only('code', 'name', 'price'));
-        });
-
-        return new ProductResource($product);
+        return new ProductResource($request->save(isUpdating: true));
     }
 
     /**

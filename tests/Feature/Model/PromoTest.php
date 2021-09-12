@@ -42,17 +42,17 @@ class PromoTest extends TestCase
         ];
 
         // status inactive
-        $this->assertFalse(Promo::isValid($request));
+        $this->assertFalse($promo->isValid($request));
 
         $promo->status = Status::Active;
         $promo->save();
 
         // should false because not met minimum price
-        $this->assertFalse(Promo::isValid($request));
+        $this->assertFalse($promo->isValid($request));
 
         $request['items'][0]['quantity'] = 2;
 
         // should true because met minimum price
-        $this->assertTrue(Promo::isValid($request));
+        $this->assertTrue($promo->isValid($request));
     }
 }

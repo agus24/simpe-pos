@@ -6,6 +6,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
 {
+    public static function init($resource) 
+    {
+        return new static($resource);
+    }
     /**
      * Transform the resource into an array.
      *

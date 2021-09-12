@@ -23,20 +23,18 @@ class Promo extends Model
         return $this->hasOne(Order::class);
     }
 
-    public static function isValid(array $request): bool
+    public function isValid(array $request): bool
     {
-        $promo = self::where('status', Status::Active)->where("id", $request['promo_id'])->first();
-        if (!$promo) return false;
+        if ($this->status->value != Status::Active) return false;
 
-        $totalPrice = 0;
-        foreach($request['items'] as $item) {
-            $product = Product::where('id', $item['product_id'])->first();
-            if (!$product) return false;
+        $items = collect($request['items']);
 
-            $totalPrice += $product->price * $item['quantity'];
-        }
+        $productMapping = Product::whereIn('id', $items->pluck('product_id'))->get()
+            ->mapWithKeys(fn($product) => [$product->id => $product->price]);
 
-        if ($totalPrice < $promo->minimum_price) return false;
+        $totalPrice = $items->reduce(fn($carry, $item) => $item['quantity'] * $productMapping[$item['product_id']] + $carry);
+
+        if ($totalPrice < $this->minimum_price) return false;
 
         return true;
     }
